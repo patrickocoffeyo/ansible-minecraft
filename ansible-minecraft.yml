@@ -1,0 +1,20 @@
+---
+
+- name: Minecraft
+  hosts: minecraft_server
+  user: root
+  tasks:
+    - name: Install jdk
+      apt: pkg=default-jdk state=installed update_cache=true
+
+    - name: Install screen
+      apt: pkg=screen state=installed update_cache=true
+
+    - name: Create minecraft dir
+      file: state=directory path=/root/minecraft
+
+    - name: Download minecraft (1.7.4)
+      command: wget -O minecraft_server.jar https://s3.amazonaws.com/Minecraft.Download/versions/1.7.4/minecraft_server.1.7.4.jar chdir=/root/minecraft creates=/root/minecraft/minecraft_server.jar
+
+    - name: Run minecraft
+      command: screen -S minecraft -d -m java -Xmx512M -Xms512M -jar /root/minecraft/minecraft_server.jar
